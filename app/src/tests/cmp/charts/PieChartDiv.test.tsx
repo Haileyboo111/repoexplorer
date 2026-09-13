@@ -47,8 +47,8 @@ describe('PieChartDiv', () => {
             expect(screen.getByText('Languages')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('TypeScript')).toBeInTheDocument();
-        expect(screen.getByText('Python')).toBeInTheDocument();
+        expect(await screen.findByText('TypeScript')).toBeInTheDocument();
+        expect(await screen.findByText('Python')).toBeInTheDocument();
     });
 
     it('shows an error message when the response is not ok', async () => {

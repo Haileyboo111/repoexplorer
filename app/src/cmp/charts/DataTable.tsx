@@ -11,7 +11,7 @@ export default function DataTable({ title, endpoint }: chartProps) {
         if (!endpoint) {
             return;
         }
-    
+
         (async () => {
             try {
                 const resp = await fetch(`${API_URL}/${endpoint}`);
@@ -34,7 +34,6 @@ export default function DataTable({ title, endpoint }: chartProps) {
         })();
     }, [endpoint]);
 
-        
     if (loading) {
         return <div>Loading {title}...</div>;
     }

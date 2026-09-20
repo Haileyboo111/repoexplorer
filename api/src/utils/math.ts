@@ -136,6 +136,7 @@ export function makeImpactIndicatorsArray(rows: repoData[]) {
     >();
 
     for (const row of rows) {
+
         const current = totals.get(row.university) ?? {
             name: row.university,
             stars: 0,
@@ -144,10 +145,10 @@ export function makeImpactIndicatorsArray(rows: repoData[]) {
             contributors: 0,
         };
 
-        current.stars += row.stargazersCount;
-        current.forks += row.forksCount;
-        current.downloads += row.releaseDownloads;
-        current.contributors += row.contributorCount;
+        current.stars += Number.isFinite(row.stargazersCount) ? row.stargazersCount : 0;
+        current.forks += Number.isFinite(row.forksCount) ? row.forksCount : 0;
+        current.downloads += Number.isFinite(row.releaseDownloads) ? row.releaseDownloads : 0;
+        current.contributors += Number.isFinite(row.contributorCount) ? row.contributorCount : 0;
 
         totals.set(row.university, current);
     }

@@ -16,13 +16,13 @@ const router = Router();
 
 // Create endpoint map: the string is the /destination and the function call gets the appropriate data
 const SUB_ENDPOINTS = {
-    totalOrganizations: (data: orgsData[]) => data.length,
-    percentOrganizationsURL: (data: orgsData[]) => getPercentFieldNotNull(data, 'url'),
-    percentOrganizationsDescription: (data: orgsData[]) => getPercentFieldNotNull(data, 'description'),
-    percentOrganizationsEmail: (data: orgsData[]) => getPercentFieldNotNull(data, 'email'),
-    orgsPerUniversity: (data: orgsData[]) => makeCountsArray(data, 'university'),
-    orgsCreatedPerYear: (data: orgsData[]) => makeDateDistributionArray(data, 'createdAt'),
-    profileCompleteness: (data: orgsData[]) => makeProfileCompleteDistributionArray(data)
+    totalOrganizations: (rows: orgsData[]) => rows.length,
+    percentOrganizationsURL: (rows: orgsData[]) => getPercentFieldNotNull(rows, 'url'),
+    percentOrganizationsDescription: (rows: orgsData[]) => getPercentFieldNotNull(rows, 'description'),
+    percentOrganizationsEmail: (rows: orgsData[]) => getPercentFieldNotNull(rows, 'email'),
+    orgsPerUniversity: (rows: orgsData[]) => makeCountsArray(rows, 'university'),
+    orgsCreatedPerYear: (rows: orgsData[]) => makeDateDistributionArray(rows, 'createdAt'),
+    profileCompleteness: (rows: orgsData[]) => makeProfileCompleteDistributionArray(rows),
 } satisfies { [K in keyof RespOrganization]: (rows: orgsData[]) => RespOrganization[K] };
 
 const endpoints = Object.keys(SUB_ENDPOINTS) as (keyof RespOrganization)[];

@@ -28,7 +28,8 @@ describe('DataTable', () => {
         render(<DataTable title="Universities" endpoint="universities" />);
 
         // headers
-        expect(await screen.findByText('name')).toBeInTheDocument();
+        // headers
+        expect(await screen.findByText('University')).toBeInTheDocument();
         expect(await screen.findByText('repositories')).toBeInTheDocument();
 
         // rows

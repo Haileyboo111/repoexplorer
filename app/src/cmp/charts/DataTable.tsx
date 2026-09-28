@@ -56,40 +56,27 @@ export default function DataTable({ title, endpoint }: chartProps) {
     }
 
     return (
-        <div
-            style={{
-                width: '75vw',
-                margin: '0 auto',
-                textAlign: 'center',
-                border: '2px solid black',
-            }}
-        >
-            <h2>{title}</h2>
+        <div style={{ width: '100%', overflowX: 'auto', marginBottom: '24px' }}>
+            <h2 style={{ textAlign: 'left' }}>{title}</h2>
 
             {data.length === 0 ? (
                 <p>No data available</p>
             ) : (
-                <table style={{ width: '100%', border: '1px solid black' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
-                        <tr>
+                        <tr style={{ borderBottom: '2px solid #ddd', textAlign: 'left' }}>
                             {headers.map((header) => (
-                                <th
-                                    key={header}
-                                    style={{ border: '1px solid black' }}
-                                >
-                                    {header}
+                                <th key={header} style={{ padding: '12px 8px' }}>
+                                    {header === 'name' ? 'University' : header === 'value' ? 'Count' : header}
                                 </th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
                         {data.map((row, index) => (
-                            <tr key={index}>
+                            <tr key={index} style={{ borderBottom: '1px solid #eee' }}>
                                 {headers.map((header) => (
-                                    <td
-                                        key={header}
-                                        style={{ border: '1px solid black' }}
-                                    >
+                                    <td key={header} style={{ padding: '12px 8px' }}>
                                         {String(row[header] ?? '')}
                                     </td>
                                 ))}

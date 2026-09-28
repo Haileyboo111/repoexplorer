@@ -41,63 +41,41 @@ export default function Overview() {
     }
 
     return (
-        <div>
-            <DataTable
-                title="Repositories per University"
-                endpoint="overview/reposPerUniversity"
-            />
+        <div className="overview-dashboard">
+            <div className="overview-top-row">
+                <div className="overview-table-col">
+                    <DataTable
+                        title="Repositories per University"
+                        endpoint="overview/reposPerUniversity"
+                    />
+                </div>
 
-            <DataBlock
-                header="Total repositories"
-                value={summary.totalRepos ?? 0}
-            />
+                <div className="overview-summary-grid">
+                    <DataBlock
+                        header="Total repositories"
+                        value={summary.totalRepos ?? 0}
+                    />
+                    <DataBlock
+                        header="Total contributors"
+                        value={summary.totalContributors ?? 0}
+                    />
+                    <DataBlock
+                        header="Repositories with a license"
+                        value={`${(summary.percentWithLicense ?? 0).toFixed(1)}%`}
+                    />
+                    <DataBlock
+                        header="Average bus factor"
+                        value={(summary.avgBusFactor ?? 0).toFixed(1)}
+                    />
+                </div>
+            </div>
 
-            <DataBlock
-                header="Total contributors"
-                value={summary.totalContributors ?? 0}
-            />
-
-            <DataBlock
-                header="Repositories with a license"
-                value={`${(summary.percentWithLicense ?? 0).toFixed(1)}%`}
-            />
-
-            <DataBlock
-                header="Average bus factor"
-                value={(summary.avgBusFactor ?? 0).toFixed(1)}
-            />
-
-            <PieChartDiv
-                title="Project Type Distribution"
-                endpoint="overview/typeDistribution"
-            />
-
-            <BarChartDiv
-                title="Community Files Presence"
-                endpoint="overview/communityFilesPresence"
-            />
-
-            <PieChartDiv
-                title="Language Distribution"
-                endpoint="overview/languageDistribution"
-            />
-
-            <PieChartDiv
-                title="License Distribution"
-                endpoint="overview/licenseDistribution"
-            />
-
-            <BarChartDiv
-                title="Language Distribution by Type"
-                endpoint="overview/languageDistributionByType"
-                stacked
-            />
-
-            <BarChartDiv
-                title="License Distribution by Type"
-                endpoint="overview/licenseDistributionByType"
-                stacked
-            />
+            <PieChartDiv title="Project Type Distribution" endpoint="overview/typeDistribution" />
+            <BarChartDiv title="Community Files Presence" endpoint="overview/communityFilesPresence" />
+            <PieChartDiv title="Language Distribution" endpoint="overview/languageDistribution" />
+            <PieChartDiv title="License Distribution" endpoint="overview/licenseDistribution" />
+            <BarChartDiv title="Language Distribution by Type" endpoint="overview/languageDistributionByType" stacked />
+            <BarChartDiv title="License Distribution by Type" endpoint="overview/licenseDistributionByType" stacked />
         </div>
     );
 }

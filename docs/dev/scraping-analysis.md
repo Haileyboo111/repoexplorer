@@ -52,6 +52,11 @@ With 30+ universities and hundreds of repos each, the total sequential round-tri
 
 ## Proof-of-Concept
 
-`/api/src/scripts/asyncScrapingPoc.ts` runs a scaled-down version of the real scraping pipeline for one university (`SLU`): searching GitHub for matching repositories, organizations, and users, then fetching every found org's/user's repositories — first sequentially, then concurrently with `Promise.all()`, using an authenticated `GITHUB_TOKEN`.
+`/api/src/scripts/asyncScrapingPoc.ts` runs a scaled-down version of the real scraping pipeline for one university (`SLU`): it searches GitHub for matching repositories, organizations, and users, then fetches every org's and user's repositories (~1,700 requests), first sequentially, then concurrently in batches of 50.
 
-**Result:** ~719.8s (12 minutes) sequential vs. ~9.0s concurrent to fetch 16,000+ owner repositories across 1,682 organizations and users — roughly an **80x speedup**. This is a much closer approximation of real pipeline behavior than a small synthetic sample, and gives a concrete sense of what a fully async rebuild could achieve: work that currently takes over 12 minutes for a single university's owner-repo fetch step alone could plausibly complete in under 10 seconds.
+Results (authenticated; timings vary a lot by network):
+- All requests at once: ~720s sequential, ~9s concurrent (concurrent found ~4% fewer repos, and this version crashed on a slower network)
+- Batches of 50: ~1,139s sequential, ~28s concurrent (concurrent searches came back one page short)
+- Batches of 50: ~478s sequential, ~705s concurrent (counts matched)
+
+These runs do not give a reliable speedup number. GitHub limits how fast any client can go (100 concurrent requests, 30 search requests per minute), so a rebuild needs a throttle sized to those limits.

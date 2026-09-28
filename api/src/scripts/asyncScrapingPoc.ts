@@ -14,6 +14,7 @@ const HEADERS: Record<string, string> = {
 
 const UNIVERSITY_ACRONYM = 'SLU';
 const UNIVERSITY_NAME = 'Saint Louis University';
+const BATCH_SIZE = 50;
 
 function getNextLink(headers: Headers): string | null {
     const linkHeader = headers.get('link');
@@ -31,11 +32,15 @@ async function githubSearch(endpoint: 'repositories' | 'users', query: string) {
         `https://api.github.com/search/${endpoint}?q=${encodeURIComponent(query)}&per_page=100`;
 
     while (url) {
-        const response: Response = await fetch(url, { headers: HEADERS });
-        if (!response.ok) break;
-        const data = await response.json();
-        items.push(...(data.items ?? []));
-        url = getNextLink(response.headers);
+        try {
+            const response: Response = await fetch(url, { headers: HEADERS });
+            if (!response.ok) break;
+            const data = await response.json();
+            items.push(...(data.items ?? []));
+            url = getNextLink(response.headers);
+        } catch {
+            break;
+        }
     }
 
     return items;
@@ -44,30 +49,43 @@ async function githubSearch(endpoint: 'repositories' | 'users', query: string) {
 async function fetchReposForOwnerSequential(owners: { login: string }[]) {
     const repos: string[] = [];
     for (const owner of owners) {
-        const response = await fetch(
-            `https://api.github.com/users/${owner.login}/repos?per_page=100`,
-            { headers: HEADERS },
-        );
-        if (!response.ok) continue;
-        const data = await response.json();
-        repos.push(...data.map((r: any) => r.full_name));
+        try {
+            const response = await fetch(
+                `https://api.github.com/users/${owner.login}/repos?per_page=100`,
+                { headers: HEADERS },
+            );
+            if (!response.ok) continue;
+            const data = await response.json();
+            repos.push(...data.map((r: any) => r.full_name));
+        } catch {
+            continue;
+        }
     }
     return repos;
 }
 
 async function fetchReposForOwnerConcurrent(owners: { login: string }[]) {
-    const results = await Promise.all(
-        owners.map(async (owner) => {
-            const response = await fetch(
-                `https://api.github.com/users/${owner.login}/repos?per_page=100`,
-                { headers: HEADERS },
-            );
-            if (!response.ok) return [];
-            const data = await response.json();
-            return data.map((r: any) => r.full_name);
-        }),
-    );
-    return results.flat();
+    const repos: string[] = [];
+    for (let i = 0; i < owners.length; i += BATCH_SIZE) {
+        const batch = owners.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(
+            batch.map(async (owner) => {
+                try {
+                    const response = await fetch(
+                        `https://api.github.com/users/${owner.login}/repos?per_page=100`,
+                        { headers: HEADERS },
+                    );
+                    if (!response.ok) return [];
+                    const data = await response.json();
+                    return data.map((r: any) => r.full_name);
+                } catch {
+                    return [];
+                }
+            }),
+        );
+        repos.push(...results.flat());
+    }
+    return repos;
 }
 
 async function scrapeUniversity(mode: 'sequential' | 'concurrent') {

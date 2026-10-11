@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import NavBar from './NavBar';
 import Overview from './dash/Overview';
-import Organization from './dash/Organization';
+import Security from './dash/Security';
+import Sustainability from './dash/Sustainability';
 import aboutText from '../../../docs/about.md?raw';
 import Markdown from 'react-markdown';
 import SidebarFilters from './SidebarFilters';
@@ -131,12 +132,9 @@ function App() {
                             />
 
                             <div className="tab-view">
-                                {orgTab === 'Overview' && <Organization />}
-                                {orgTab !== 'Overview' && (
-                                    <div className="tab-placeholder">
-                                        <p>Organizations {orgTab} Dashboard</p>
-                                    </div>
-                                )}
+                                <div className="tab-placeholder">
+                                    <p>Organizations {orgTab} Dashboard</p>
+                                </div>
                             </div>
                         </div>
                     </div>
